@@ -1,0 +1,165 @@
+<html>
+    <body>
+        <div>
+            <br/><br/><br/><br/><br/><br/>
+            
+            <h1 id="questionText">Will you be my Valentine?</h1>
+            
+            <!-- Image that changes when "No" is clicked -->
+            <img id="valentineImage" src="images/catRose.jpeg" alt="Valentine's Day Image" style="max-width: 300px; height: auto; position: relative;">
+            
+            <br/><br/><br/>
+            
+            <!-- "Yes" and "No" buttons -->
+            <button id="yesButton">Yes</button>
+            <button id="no">No</button>
+        </div>
+
+        <style>
+            body {
+                background: linear-gradient(to bottom, #f5cac3, #f7ede2);
+            }
+
+            /* Center content */
+            div {
+                text-align: center;
+                vertical-align: middle;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Main question text style */
+            h1 {
+                color: #ff477e;
+                transition: top 0.3s ease-out; /* Smooth transition for movement */
+                position: relative;
+            }
+
+            /* "Yes" button styling */
+            #yesButton {
+                background-color: #06d6a0;
+                transition: transform 0.3s, top 0.3s ease-out;
+                margin-right: 10px;
+                width: 120px;
+                font-size: 30px;
+                height: 40px;
+                color: #fff;
+                margin-left: -140px;
+                position: relative;
+                z-index: 2;
+                top: 0; /* Start at the top */
+            }
+
+            /* "No" button styling */
+            #no {
+                position: absolute;
+                background-color: #ef476f;
+                transition: transform 0.3s, z-index 0.3s;
+                margin-left: 10px;
+                width: auto; /* Allow button to resize dynamically */
+                height: 50px;
+                font-size: 20px;
+                color: #fff;
+                padding: 10px 20px; /* Add padding for better readability */
+                white-space: nowrap; /* Prevents text from breaking into multiple lines */
+                border-radius: 10px; /* Rounded edges for better styling */
+                z-index: 1; /* Initially on top */
+            }
+        </style>
+
+        <script>
+            // Redirects "Yes" button to another page
+            document.getElementById("yesButton").addEventListener("click", function() {
+                window.location.href = "yesPage.html"; // Opens yesPage
+            });
+
+            // References to buttons and image
+            var yesButton = document.getElementById("yesButton");
+            var no = document.getElementById("no");
+            var valentineImage = document.getElementById("valentineImage");
+            var questionText = document.getElementById("questionText");
+
+            // List of sad texts for "No" button
+            var noTexts = [
+                "i think you misclicked...",
+                "are you sure?",
+                "baby are you positive?",
+                "pooks I thought you loved me :(", 
+                "babyyy noooo, please reconsider", 
+                "don't do this to me :(", 
+                "i'm sad now :(", 
+                "i'm gonna cry nooo"
+            ];
+
+            var noTextIndex = 0; // Start from the first text
+
+            // List of images after first "No" click
+            var imageSources = [
+                "images/clickHere.jpeg", 
+                "images/sadFace1.jpeg", 
+                "images/tear1.jpeg", 
+                "images/cryingHands.jpeg",
+                "images/handOnFace.jpeg",
+                "images/shyBegging.jpeg",
+                "images/praying.jpeg"
+            ];
+
+            // Event listener for "No" button so that it moves
+            no.addEventListener("click", change);
+
+            function change() {
+                // Change the button text to the next one in order
+                no.innerText = noTexts[noTextIndex];
+
+                // Move the "No" button to a random location
+                var i = Math.floor(Math.random() * window.innerWidth * 0.7);
+                var j = Math.floor(Math.random() * window.innerHeight * 0.7);
+                no.style.left = i + "px";
+                no.style.top = j + "px";
+
+                // Make the "Yes" button grow larger AND move upwards
+                var currentWidth = yesButton.offsetWidth;
+                var currentHeight = yesButton.offsetHeight;
+                yesButton.style.width = currentWidth + 100 + "px"; // Increased growth per click (bigger growth)
+                yesButton.style.height = currentHeight + 50 + "px"; // Increase the height more
+                yesButton.style.fontSize = (parseInt(yesButton.style.fontSize || 30) + 15) + "px"; // Larger font size
+
+                // Move "Yes" button upwards slightly each time
+                var currentTop = parseInt(window.getComputedStyle(yesButton).top) || 0;
+                yesButton.style.top = (currentTop - 20) + "px"; // Moves up 20px each time
+
+                // Move the text up slightly less than the image
+                var currentTextTop = parseInt(window.getComputedStyle(questionText).top) || 0;
+                questionText.style.top = (currentTextTop - 10) + "px"; // Move text up less
+
+                // Move the image upwards more than the text
+                var currentImgTop = parseInt(window.getComputedStyle(valentineImage).top) || 0;
+                valentineImage.style.top = (currentImgTop - 15) + "px"; // Move image up more
+
+                // If the button grows to cover the entire screen, adjust the size
+                if (yesButton.offsetWidth >= window.innerWidth || yesButton.offsetHeight >= window.innerHeight) {
+                    yesButton.style.width = "100vw"; 
+                    yesButton.style.height = "100vh"; 
+                    yesButton.style.position = "absolute";
+                    yesButton.style.top = "0"; 
+                    yesButton.style.left = "0"; 
+                    yesButton.style.fontSize = "50px"; 
+                    yesButton.style.zIndex = "9999"; // Ensure it's on top
+                    
+                    // Only after the "Yes" button covers the screen, hide the "No" button
+                    no.style.zIndex = "-1"; // Move the "No" button underneath the "Yes" button
+                }
+
+                // Randomly select an image from the folder
+                var randomImageIndex = Math.floor(Math.random() * imageSources.length);
+                valentineImage.src = imageSources[randomImageIndex];
+
+                // Increment the noTextIndex and loop back to 0 if we reach the end
+                noTextIndex++;
+                if (noTextIndex >= noTexts.length) {
+                    noTextIndex = 0; // Reset the index to 0 when it reaches the end
+                }
+            }
+        </script>
+    </body>
+</html>
